@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TensorFlow.jst</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"> </script>
+</head>
+<style>
+    body{
+        background-color: rgb(246, 219, 222);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+    button:hover{
+        color: white;
+        background-color: rgb(244, 210, 216);
+    }
+    h1{
+        margin-top: 55px;
+    }
+    .container {
+      margin-top: 55px;
+      background-color: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.266);
+      max-width: 400px;
+      text-align: center;
+    }
+    input {
+      padding: 10px;
+      border: 1px solid #d1d5db;
+      border-radius: 5px;
+      margin-bottom: 15px;
+    }
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+</style>
+<body>
+    <h1>Modelo secuencial</h1>
+    <div class="container">
+        <h3>Formula: y=2x+6</h3>
+        <input id="input" type="text" placeholder="escribe aqui el valor de x..">
+        <button onclick="predecir()">Predecir Y</button>
+    <div id="outpud_field"></div>
+    </div>
+   <script> 
+   //Definimos la variable global del modelo
+   let model;
+   async function learnLinear() {
+    //Creacion del modelo secuencial
+    model = tf.sequential();
+    model.add(tf.layers.dense({units : 1, inputShape: [1]}))
+    model.compile({
+        //Error cuadratico medio: mide la diferencia cuadratica promedio
+        //entre predicciones y valores reales
+        loss: 'meanSquaredError',
+        //Ajusta los parametros del modelo(pesos y sesgos)
+        optimizer: 'sgd'  
+    })   
+    //Creacion de tensor
+    const xs = tf.tensor2d([-6,-5,-4,-3,-2,1, 0,1,2],[9,1])
+    const ys = tf.tensor2d(xs.dataSync().map(x => 2 * x + 6), [9,1])
+    await model.fit(xs, ys, {epochs:350}) //numero de iteraciones
+    document.getElementById("outpud_field").innerText = "entrenando modelo..."
+   }
+   async function predecir() {
+        // Obtenemos el valor ingresado por el usuario y lo convertimos a número
+        const inputVal = parseFloat(document.getElementById('input').value);
+
+        // Validación: asegurarse de que el usuario ingresó un número
+        if (isNaN(inputVal)) {
+            document.getElementById('outpud_field').innerText = 
+                "Introduce un número válido.";
+            return;
+        }
+
+        // Creamos un tensor a partir del valor de x
+        const inputTensor = tf.tensor2d([inputVal], [1,1]);
+
+        // Hacemos la predicción
+        const outputTensor = model.predict(inputTensor);
+
+        // Convertimos el tensor de salida en un array para mostrar el resultado
+        outputTensor.array().then(result => {
+            document.getElementById('outpud_field').innerText =
+                `El resultado de ${inputVal} es: ${result[0][0].toFixed(2)}`;
+        });
+    }
+learnLinear()
+   </script> 
+</body>
+</html>
