@@ -16,8 +16,13 @@ Este proyecto consiste en una implementación básica de un modelo de aprendizaj
 
 ## ¿Cómo usarlo?
 
-1. Abrí el archivo `index.html` en tu navegador.
-2. . Ingresá un valor para `x` en el campo de texto.
-3. . Hacé clic en “Predecir Y” y verás el resultado estimado de `y`.
+1. Clonar este proyecto y probalo localmente:
+```bash
+git clone https://github.com/Fleitaselene-dev/modelo_secuencial_simple.git
+cd modelo_secuencial_simple
+```
+2. Abrí el archivo `index.html` en tu navegador.
+3. . Ingresá un valor para `x` en el campo de texto.
+4. . Hacé clic en “Predecir Y” y verás el resultado estimado de `y`.
 
 
